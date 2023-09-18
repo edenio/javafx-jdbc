@@ -31,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Seller;
+import model.services.DepartmentService;
 import model.services.SellerService;
 
 public class SellerListController implements Initializable, DataChangeListener {
@@ -42,13 +43,13 @@ public class SellerListController implements Initializable, DataChangeListener {
 
 	@FXML
 	private TableColumn<Seller, Integer> tableColumnId;
-	
+
 	@FXML
 	private TableColumn<Seller, String> tableColumnName;
-	
+
 	@FXML
 	private TableColumn<Seller, String> tableColumnEmail;
-	
+
 	@FXML
 	private TableColumn<Seller, Date> tableColumnBirthDate;
 
@@ -117,24 +118,31 @@ public class SellerListController implements Initializable, DataChangeListener {
 	}
 
 	public void createDialogForm(Seller obj, String absolutedName, Stage parentStage) {
-		
-		  try {
-		  
-		  FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutedName));
-		  Pane pane = loader.load();
-		  
-		  SellerFormController controller = loader.getController();
-		  controller.setSeller(obj); controller.setSellerService(new SellerService());
-		  controller.subscribeDataChangeListener(this); controller.updateFormData();
-		  
-		  Stage dialogStage = new Stage(); dialogStage.setTitle("Enter Seller data");
-		  dialogStage.setScene(new Scene(pane)); dialogStage.setResizable(false);
-		  dialogStage.initOwner(parentStage);
-		  dialogStage.initModality(Modality.WINDOW_MODAL); dialogStage.showAndWait();
-		  
-		  } catch (IOException e) { Alerts.showAlert("IO Exception",
-		 "Error Load Viewer", e.getMessage(), AlertType.ERROR); }
-		 
+
+		try {
+
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutedName));
+			Pane pane = loader.load();
+
+			SellerFormController controller = loader.getController();
+			controller.setSeller(obj);
+			controller.setServices(new SellerService(), new DepartmentService());
+			controller.loadAssociatedObjects();
+			controller.subscribeDataChangeListener(this);
+			controller.updateFormData();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Enter Seller data");
+			dialogStage.setScene(new Scene(pane));
+			dialogStage.setResizable(false);
+			dialogStage.initOwner(parentStage);
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.showAndWait();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("IO Exception", "Error Load Viewer", e.getMessage(), AlertType.ERROR);
+		}
+
 	}
 
 	@Override
@@ -158,8 +166,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 					return;
 				}
 				setGraphic(button);
-				button.setOnAction(
-						event -> createDialogForm(obj, "/gui/SellerForm.fxml", Utils.currentStage(event)));
+				button.setOnAction(event -> createDialogForm(obj, "/gui/SellerForm.fxml", Utils.currentStage(event)));
 			}
 		});
 	}
@@ -183,22 +190,21 @@ public class SellerListController implements Initializable, DataChangeListener {
 	}
 
 	private void removeEntity(Seller obj) {
-		
-	Optional<ButtonType> result = Alerts.showConfirmation("Confirmation", "Are you sure to delete?");
-	if(service == null) {
-		throw new IllegalStateException("Service was null");
-	}
-	
-	try {
-		
-		service.remove(obj);
-		updateTableView();
-		
-	} catch (DbIntegrityException e) {
-		Alerts.showAlert("Error removing object", null, e.getMessage(), AlertType.ERROR);
-	}
-	
-		
+
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmation", "Are you sure to delete?");
+		if (service == null) {
+			throw new IllegalStateException("Service was null");
+		}
+
+		try {
+
+			service.remove(obj);
+			updateTableView();
+
+		} catch (DbIntegrityException e) {
+			Alerts.showAlert("Error removing object", null, e.getMessage(), AlertType.ERROR);
+		}
+
 	}
 
 }
