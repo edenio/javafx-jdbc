@@ -1,0 +1,49 @@
+/* Estilo para o VBox principal */
+#VBox {
+    -fx-background-color: #f0f0f0; /* Cor de fundo */
+}
+
+/* Estilo para o Label de título */
+#Label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0;
+}
+
+/* Estilo para o ToolBar */
+#ToolBar {
+    -fx-background-color: #333333; /* Cor de fundo */
+}
+
+/* Estilo para os botões no ToolBar */
+#btNew {
+    -fx-background-color: #0073e6; /* Cor de fundo */
+    -fx-text-fill: white; /* Cor do texto */
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+}
+
+/* Estilo para a TableView */
+#tableViewSeller {
+    -fx-background-color: white; /* Cor de fundo */
+    -fx-padding: 10px;
+}
+
+/* Estilo para as colunas da TableView */
+#tableColumnId,
+#tableColumnName,
+#tableColumnEmail,
+#tableColumnBirthDate,
+#tableColumnBaseSalary,
+#tableColumnEDIT,
+#tableColumnREMOVE {
+    -fx-alignment: CENTER; /* Alinhamento de texto ao centro */
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+/* Estilo para as células da TableView */
+.table-cell {
+    -fx-alignment: CENTER; /* Alinhamento de texto ao centro */
+}
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
